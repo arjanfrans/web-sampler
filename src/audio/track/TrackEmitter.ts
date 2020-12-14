@@ -15,12 +15,6 @@ export class TrackEmitter extends EventEmitter {
     constructor(private readonly track: Track) {
         super()
 
-        this.on(SetTrackNoteEvent, (event: SetTrackNoteEvent) => {
-            track.sequenceNotes[event.index] = event.isActive
-
-            this.emit(new TrackEvent(this.track))
-        })
-
         this.on(UpdateChannelVolumeEvent, (event: UpdateChannelVolumeEvent) => {
             track.channel.volume.value = event.volume
         })
@@ -31,14 +25,10 @@ export class TrackEmitter extends EventEmitter {
 
         this.on(SoloChannelEvent, (event: SoloChannelEvent) => {
             track.solo = event.solo
-
-            this.emit(new TrackEvent(this.track))
         })
 
         this.on(MuteChannelEvent, (event: MuteChannelEvent) => {
             track.mute = event.mute
-
-            this.emit(new TrackEvent(this.track))
         })
 
         this.on(EnableTrackEffectEvent, (event: EnableTrackEffectEvent) => {
