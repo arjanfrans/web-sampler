@@ -10,6 +10,12 @@ export class Pattern {
         }
     }
 
+    public clear(): void {
+        for (const patternTrack of this.tracks.values()) {
+            patternTrack.clear()
+        }
+    }
+
     set steps(value: SequencerStep) {
         for (const pattern of this.tracks.values()) {
             pattern.steps = value

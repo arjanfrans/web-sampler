@@ -3,7 +3,6 @@ import {TransportControlView} from "./TransportControlView";
 import {TransportPositionUpdatedEvent} from "../../audio/transport/events/TransportPositionUpdatedEvent";
 import {Transport} from "../../audio/transport/Transport"
 import {Track} from "../../audio/track/Track";
-import styles from "./TransportView.module.css"
 import {MasterTrack} from "../../audio/track/MasterTrack";
 import {Sequencer} from "../../audio/sequencer/Sequencer";
 import {SequencerView} from "./sequencer/SequencerView";

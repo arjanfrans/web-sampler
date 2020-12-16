@@ -11,7 +11,8 @@ import { DrawLoopInterface } from "./DrawLoopInterface"
 import { ArrayHelper } from "../util/ArrayHelper"
 import { SequenceLoopInterface } from "./SequenceLoopInterface"
 import { SequenceDrawLoopInterface } from "./SequenceDrawLoopInterface"
-import { Sequencer } from "./sequencer/Sequencer"
+import { Sequencer, SequencerStep } from "./sequencer/Sequencer"
+import { TransportStatusEnum } from "./transport/TransportStatusEnum"
 
 export class AudioEngine {
     public readonly masterTrack = new MasterTrack()
@@ -24,10 +25,16 @@ export class AudioEngine {
 
     constructor(private readonly config: Config) {
         this.transport = new Transport()
+
+        const { sequencerPreset } = config
+
         this.sequencer = new Sequencer({
-            steps: 16,
+            steps: sequencerPreset.steps as SequencerStep,
+            subdivision: sequencerPreset.subdivision,
             tracks: config.trackData.map((v) => v.id),
         })
+
+        this.sequencer.loadPreset(sequencerPreset)
     }
 
     private getDraws(): Array<DrawLoopInterface> {
@@ -57,13 +64,24 @@ export class AudioEngine {
         this.startDrawLoop()
 
         this.sequencer.setOnChangeSteps((steps: number) => {
+            let startAgain = false
+
+            if (this.transport.transportStatus === TransportStatusEnum.Started) {
+                this.transport.stop()
+                startAgain = true
+            }
+
             this.sequenceLoop?.dispose()
             this.drawSequenceLoop?.dispose()
 
             this.transport.steps = this.sequencer.steps
 
             this.startSequenceDrawLoop()
-            this.startDrawLoop()
+            this.startSequenceLoop()
+
+            if (startAgain) {
+                this.transport.start()
+            }
         })
     }
 
@@ -101,11 +119,12 @@ export class AudioEngine {
                 }, time)
             },
             ArrayHelper.indexes(this.sequencer.steps),
-            this.config.noteSubdivision
+            this.sequencer.subdivision
         ).start()
     }
 
     private startSequenceLoop(): void {
+        console.log(this.sequencer.steps, this.sequencer.subdivision)
         this.sequenceLoop = new Tone.Sequence(
             (time, index) => {
                 for (const sequenceUpdate of this.getSequenceUpdates()) {
@@ -115,7 +134,7 @@ export class AudioEngine {
                 }
             },
             ArrayHelper.indexes(this.sequencer.steps),
-            this.config.noteSubdivision
+            this.sequencer.subdivision
         ).start()
     }
 }
