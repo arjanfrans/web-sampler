@@ -1,10 +1,12 @@
 import { SequencerEmitter } from "./SequencerEmitter"
 import { Pattern } from "./Pattern"
+import {SequencerPreset} from "../Config";
 
 export type SequencerStep = 4 | 8 | 16 | 32 | 64
 
 type SequencerOptions = {
     steps: SequencerStep
+    subdivision: number,
     tracks: string[]
     onChangeSteps?: (steps: number) => void
 }
@@ -14,11 +16,27 @@ export class Sequencer {
     private patterns: Pattern[] = []
     private _steps: SequencerStep
     private onChangeSteps?: (steps: number) => void
+    private _subdivision: string
 
     constructor(options: SequencerOptions) {
         this._steps = options.steps || 16
         this.onChangeSteps = options.onChangeSteps
         this.patterns.push(new Pattern(this._steps, options.tracks))
+        this._subdivision = `${options.subdivision || 8}n`;
+    }
+
+    public loadPreset(preset: SequencerPreset) {
+        this.steps = preset.steps as SequencerStep
+        this._subdivision = `${preset.subdivision}`;
+
+        for(const track of preset.tracks) {
+            const pattern = this.patterns[0];
+        }
+    }
+
+    get subdivision(): string
+    {
+        return this._subdivision
     }
 
     public setOnChangeSteps(onChangeSteps: (steps: number) => void): void {

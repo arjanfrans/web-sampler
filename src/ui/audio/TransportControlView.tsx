@@ -131,6 +131,7 @@ export class TransportControlView extends React.Component<TransportControlViewPr
                     />
                 </div>
                 <div>
+                    Steps:
                     <select
                         value={this.state.steps}
                         onChange={(event) => this.updateSteps(Number.parseInt(event.currentTarget.value))}

@@ -16,15 +16,15 @@ export class PatternTrack {
     }
 
     set steps(value: SequencerStep) {
-        this._steps = value
-
+        console.log()
         if (value > this._steps) {
-            const slicedData = this.data.slice(0, value - this.data.length)
-
-            this.data = this.data.concat(slicedData)
+            this.data = ArrayHelper.stretch(this.data, value)
         } else if (value < this._steps) {
             this.data = this.data.slice(0, value)
         }
+
+        console.log(this.data.length)
+        this._steps = value
     }
 
     public setCell(index: number, value: boolean) {

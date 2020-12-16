@@ -5,6 +5,7 @@ import {Transport} from "../../../audio/transport/Transport";
 import {TransportPositionUpdatedEvent} from "../../../audio/transport/events/TransportPositionUpdatedEvent";
 import {SetPatternCellEvent} from "../../../audio/sequencer/events/SetPatternCellEvent";
 import styles from "./SequencerView.module.css"
+import {SequencerStepsUpdatedEvent} from "../../../audio/sequencer/events/SequencerStepsUpdatedEvent";
 
 type SequencerViewProps = {
     sequencer: Sequencer
@@ -31,6 +32,10 @@ export class SequencerView extends React.Component<SequencerViewProps, Sequencer
             this.setState({
                 transportPosition: event.transportPosition
             })
+        })
+
+        this.props.sequencer.emitter.on(SequencerStepsUpdatedEvent, (event: SequencerStepsUpdatedEvent) => {
+            this.forceUpdate()
         })
     }
 

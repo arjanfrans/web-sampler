@@ -1,7 +1,5 @@
 import { Track } from "./Track"
 import { EventEmitter } from "../../events/EventEmitter"
-import { SetTrackNoteEvent } from "./events/SetTrackNoteEvent"
-import { TrackEvent } from "./events/TrackEvent"
 import { UpdateChannelVolumeEvent } from "./events/UpdateChannelVolumeEvent"
 import { UpdateChannelPanningEvent } from "./events/UpdatePanningVolumeEvent"
 import { SoloChannelEvent } from "./events/SoloChannelEvent"
